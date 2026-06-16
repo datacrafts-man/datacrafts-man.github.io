@@ -1,0 +1,136 @@
+baseURL = "https://datacrafts-man.github.io/"
+title = "datacrafts-man"
+locale = "ko"
+defaultContentLanguage = "ko"
+theme = "PaperMod"
+
+enableInlineShortcodes = true
+enableRobotsTXT = true
+enableEmoji = true
+pygmentsUseClasses = true
+
+mainsections = [
+  "python",
+  "automation",
+  "ai",
+  "data-analysis",
+  "quant",
+  "projects",
+  "career",
+]
+
+[minify]
+disableXML = true
+
+[pagination]
+pagerSize = 10
+
+[taxonomies]
+category = "categories"
+tag = "tags"
+series = "series"
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
+[params]
+env = "production"
+description = "Python, AI, 데이터 분석, 퀀트, 자동화에 관한 기술 블로그"
+author = "datacrafts-man"
+
+defaultTheme = "auto"
+ShowShareButtons = true
+ShowReadingTime = true
+ShowPostNavLinks = true
+ShowBreadCrumbs = true
+ShowCodeCopyButtons = true
+ShowRssButtonInSectionTermList = true
+ShowAllPagesInArchive = true
+ShowPageNums = true
+ShowToc = true
+
+[params.homeInfoParams]
+Title = "datacrafts-man"
+Content = """
+Python, AI, 데이터 분석, 퀀트, 자동화를 다루는 기술 블로그입니다.
+
+- 코드와 실무 경험을 중심으로 글을 작성합니다.
+- [소개](/about/)에서 블로그 운영 방향을 확인할 수 있습니다.
+"""
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/datacrafts-man"
+
+[params.assets]
+disableHLJS = true
+
+[menu]
+[[menu.main]]
+name = "소개"
+url = "/about/"
+weight = 1
+
+[[menu.main]]
+name = "아카이브"
+url = "/archives/"
+weight = 2
+
+[[menu.main]]
+name = "검색"
+url = "/search/"
+weight = 3
+
+[[menu.main]]
+name = "태그"
+url = "/tags/"
+weight = 4
+
+[[menu.main]]
+identifier = "python"
+name = "Python"
+url = "/python/"
+weight = 10
+
+[[menu.main]]
+identifier = "automation"
+name = "Automation"
+url = "/automation/"
+weight = 11
+
+[[menu.main]]
+identifier = "ai"
+name = "AI"
+url = "/ai/"
+weight = 12
+
+[[menu.main]]
+identifier = "data-analysis"
+name = "Data Analysis"
+url = "/data-analysis/"
+weight = 13
+
+[[menu.main]]
+identifier = "quant"
+name = "Quant"
+url = "/quant/"
+weight = 14
+
+[[menu.main]]
+identifier = "projects"
+name = "Projects"
+url = "/projects/"
+weight = 15
+
+[[menu.main]]
+identifier = "career"
+name = "Career"
+url = "/career/"
+weight = 16
+
+[markup]
+[markup.goldmark.renderer]
+unsafe = true
+
+[markup.highlight]
+noClasses = false
