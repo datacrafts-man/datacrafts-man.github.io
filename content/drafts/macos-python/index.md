@@ -1,136 +1,186 @@
 ---
-title: "macOS 반복 작업 자동화: Python으로 스크립트 작성하기"
-date: 2026-06-16T22:10:00+09:00
+title: "macOS 파이썬 개발환경 구성 가이드: pyenv와 venv로 깔끔하게 시작하기"
+date: 2026-06-21T19:45:00+09:00
 draft: true
-tags: ["macOS", "automation", "python", "scripting"]
-categories: ["automation"]
-description: "macOS 환경에서 반복적인 파일 정리, 파일 실행, 다운로드 정리 등의 일상 작업을 파이썬 내장 os 및 subprocess 모듈을 활용해 완벽하게 자동화하는 실무 스크립트를 구현합니다."
+tags: ["macOS", "python", "pyenv", "venv"]
+categories: ["python"]
+description: "macOS 환경에서 시스템 파이썬을 오염시키지 않고, pyenv와 venv를 활용해 깔끔하고 독립적인 파이썬 개발 환경을 구축하는 방법을 단계별로 알기 쉽게 정리합니다."
 ShowToc: true
 TocOpen: false
 ---
 
-매일 출근하자마자 하는 일이 무엇인가요? 다운로드 폴더에서 불필요한 스크린샷 파일을 지우고, 특정 폴더의 파일들을 백업용 외장 드라이브로 옮기며, 터미널을 열어 늘 쓰던 명령어 서너 개를 차례로 입력하진 않나요? 결론부터 말씀드리면, **파이썬의 표준 내장 라이브러리인 os와 subprocess 모듈을 조합해 단 몇십 줄의 스크립트만 작성해 두면, macOS 내에서 일어나는 파일 관리와 터미널 유틸리티 실행 작업을 클릭 한 번으로 자동화**할 수 있습니다.
+새로운 Mac을 받거나 포맷한 뒤 개발 환경을 세팅할 때, 가장 먼저 설치하게 되는 도구 중 하나가 바로 **파이썬(Python)**입니다. 결론부터 말씀드리면, **macOS에 기본적으로 설치되어 있는 시스템 파이썬은 절대 그대로 사용하면 안 되며, pyenv와 venv를 조합하여 버전과 프로젝트 환경을 철저히 격리해 사용**해야 합니다.
 
-과거의 저 역시 매번 바탕화면이 다운로드 파일과 캡처 이미지로 지저분해질 때마다 손으로 파일을 분류하여 폴더에 집어넣는 노가다를 반복하곤 했습니다. 어느 날 이 반복적인 귀찮음을 해소하고자 파이썬 파일 정리 스크립트를 짜서 macOS 스케줄러(launchd)에 올려두었고, 그 이후로는 파일 정리 스트레스에서 완전히 해방되었습니다. 이 글에서는 비전공자나 초보자도 바로 적용할 수 있도록 macOS의 파일 시스템을 다루는 `os` 활용법부터 다른 실행 프로그램들을 제어하는 `subprocess` 구현까지 실전 자동화 스크립트 튜토리얼을 상세히 전달합니다.
+과거의 저는 이러한 격리의 중요성을 잘 알지 못한 채, 터미널에 `pip install`을 남발하며 전역(Global) 공간에 온갖 패키지들을 설치하곤 했습니다. 그러다 특정 라이브러리의 버전 충돌로 인해 macOS 시스템 도구가 오동작하거나, 이전에 잘 돌아가던 다른 프로젝트의 코드가 먹통이 되어 꼬여버린 환경을 복구하느라 밤을 새운 쓰라린 기억이 있습니다. 
 
----
-
-## 1. 파일 자동화의 핵심 도구 (os vs pathlib)
-
-과거 파이썬 스크립트에서는 파일 경로와 시스템 폴더를 제어할 때 `os` 모듈을 주로 사용했습니다. 하지만 현대 파이썬(3.4+)에서는 객체 지향형 경로 처리가 가능한 `pathlib` 모듈이 함께 선호됩니다. 자동화 스크립트를 짜기 전, 두 라이브러리의 용도와 차이를 이해해야 합니다.
-
-| 기능 비교 | 기존 os 모듈 | 현대적 pathlib 모듈 |
-| :--- | :--- | :--- |
-| **경로 표현** | 문자열 기반 (`"folder/file.txt"`) | Path 객체 기반 (`Path("folder") / "file.txt"`) |
-| **경로 결합** | `os.path.join(path, filename)` | `path / filename` (슬래시 연산자 직관적 매핑) |
-| **디렉토리 생성**| `os.makedirs(path, exist_ok=True)`| `Path.mkdir(parents=True, exist_ok=True)` |
-| **파일 존재 확인**| `os.path.exists(path)` | `Path.exists()` |
-
-*실무에서는 기본적인 시스템 환경 변수나 셸 실행 명령 환경 제어에는 `os`를 사용하고, 파일 경로 및 폴더 관리는 가독성이 좋은 `pathlib`을 함께 조화롭게 섞어 사용합니다.*
+이 글에서는 저와 같은 실수를 반복하지 않도록, macOS 환경에서 가장 깔끔하고 정석적인 파이썬 개발 환경을 구축하는 방법을 아주 기초적인 단계부터 핵심적인 설정까지 상세히 공유합니다.
 
 ---
 
-## 2. macOS 다운로드 폴더 자동 정리 스크립트 (단계별 실습)
+## 1. 왜 파이썬 환경 격리가 필수적일까요?
 
-다운로드 폴더에 쌓여 있는 파일들을 확장자별(이미지, 문서, 실행파일)로 자동 분류하여 각 하위 폴더로 이동시키는 스크립트를 구현합니다.
+macOS에는 운영체제 자체나 Xcode 개발 도구 등이 내부적으로 사용하는 시스템 파이썬이 이미 내장되어 있습니다. 이를 그대로 사용해 패키지를 설치하거나 수정을 가하게 되면 다음과 같은 치명적인 문제가 발생합니다.
 
-### 1단계: 대상 디렉토리 설정 및 폴더 생성
-먼저 다운로드 폴더(`~/Downloads`) 경로를 획득하고, 분류용 타겟 폴더들을 동적으로 생성합니다.
+1. **시스템 안정성 저하**: macOS 내부 시스템 스크립트가 의존하는 파이썬 패키지 버전을 변경해 버리면 OS 기능 자체가 오작동할 수 있습니다.
+2. **권한 오류**: 시스템 영역에 설치를 시도하다 보니 상시 `sudo` 권한을 요구하게 되고, 이는 보안상 매우 취약한 환경을 만듭니다.
+3. **프로젝트 간 버전 충돌**: 프로젝트 A는 Pandas 1.x 버전을 쓰고 프로젝트 B는 Pandas 2.x 버전을 써야 할 때, 글로벌 환경 하나만 사용하면 한쪽 프로젝트는 무조건 실행에 실패하게 됩니다.
 
-```python
-import os
-from pathlib import Path
+따라서 우리는 **Homebrew**로 패키지 매니저를 설치한 뒤, **pyenv**로 독립적인 파이썬 버전을 내려받고, **venv**를 이용해 프로젝트마다 고유한 가상환경을 만들어 사용할 것입니다.
 
-# 사용자의 홈 디렉토리를 찾아 다운로드 폴더 지정
-DOWNLOADS_DIR = Path.home() / "Downloads"
+---
 
-# 확장자별 이동 대상 폴더 정의
-DEST_FOLDERS = {
-    ".png": DOWNLOADS_DIR / "Images",
-    ".jpg": DOWNLOADS_DIR / "Images",
-    ".jpeg": DOWNLOADS_DIR / "Images",
-    ".pdf": DOWNLOADS_DIR / "Documents",
-    ".xlsx": DOWNLOADS_DIR / "Documents",
-    ".zip": DOWNLOADS_DIR / "Archives",
-}
+## 2. 1단계: 패키지 매니저 Homebrew 설치
 
-# 대상 폴더가 없으면 자동 생성
-for folder in set(DEST_FOLDERS.values()):
-    folder.mkdir(parents=True, exist_ok=True)
+Mac 개발자들에게 절대 빠질 수 없는 도구가 바로 패키지 매니저인 **Homebrew**입니다. pyenv를 컴파일하고 설치하는 데 필요한 다양한 라이브러리를 터미널 명령어 하나로 손쉽게 관리할 수 있게 해줍니다.
+
+터미널을 열고 아래 명령어를 입력하여 Homebrew를 설치합니다.
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### 2단계: 파일 분류 및 안전한 이동 구현
-이후 다운로드 폴더 내의 파일들을 순회하며 대상 폴더로 파일을 안전하게 이동시킵니다. 중복 파일이 있을 경우 덮어쓰지 않고 뒤에 숫자를 붙이는 안전장치를 더합니다.
+설치가 완료되면 화면의 안내 메시지(Next steps)를 따라 아래와 같이 셸 환경 변수에 Homebrew 경로를 추가해 줍니다. (M1/M2/M3 Apple Silicon Mac 기준)
 
-```python
-def move_file_safely(src_path: Path, dest_dir: Path):
-    dest_path = dest_dir / src_path.name
-    
-    # 만약 대상 경로에 이미 같은 이름의 파일이 존재한다면 이름을 변경
-    counter = 1
-    while dest_path.exists():
-        new_name = f"{src_path.stem}_{counter}{src_path.suffix}"
-        dest_path = dest_dir / new_name
-        counter += 1
-        
-    os.rename(src_path, dest_path)
-    print(f"이동 완료: {src_path.name} -> {dest_path.name}")
-
-# 다운로드 디렉토리 파일 순회하며 이동 실행
-for file_path in DOWNLOADS_DIR.iterdir():
-    # 폴더가 아닌 파일만 이동 처리
-    if file_path.is_file() and file_path.suffix.lower() in DEST_FOLDERS:
-        target_dir = DEST_FOLDERS[file_path.suffix.lower()]
-        move_file_safely(file_path, target_dir)
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
 ---
 
-## 3. Subprocess를 이용한 macOS 앱 및 셸 스크립트 실행 제어
+## 3. 2단계: pyenv로 파이썬 버전 자유롭게 변경하기
 
-자동화 중에 다른 macOS 앱을 실행하거나, 터미널 명령을 직접 파이썬에서 수행하고 그 결과를 가져오고 싶을 때 `subprocess` 모듈을 사용합니다.
+**pyenv**는 Mac 시스템에 여러 버전의 파이썬을 설치하고, 프로젝트별로 원하는 버전을 자유롭게 스위칭할 수 있도록 돕는 버전 관리 도구입니다.
 
-### 터미널 명령 실행 및 결과 텍스트 획득
-`subprocess.run` 함수를 사용하면 터미널 명령의 반환값과 표준 출력을 획득할 수 있습니다.
+### 1) pyenv 설치 및 의존성 라이브러리 설치
+파이썬을 소스 코드로부터 올바르게 빌드하기 위해, 먼저 빌드 의존 도구들을 설치한 후 pyenv를 설치합니다.
 
-```python
-import subprocess
+```bash
+# 파이썬 컴파일에 필요한 의존성 도구 설치
+brew install openssl readline sqlite3 xz zlib tcl-tk
 
-# macOS의 현재 디스크 여유 공간(df -h)을 조회하는 터미널 명령 실행
-try:
-    result = subprocess.run(
-        ["df", "-h", "/"],
-        capture_output=True,
-        text=True,
-        check=True
-    )
-    # 터미널 명령어의 출력 내용을 파이썬 변수로 획득
-    output = result.stdout
-    print("디스크 사용량 조회 성공:")
-    print(output)
-except subprocess.CalledProcessError as e:
-    print(f"터미널 명령 실패: {e}")
+# pyenv 설치
+brew install pyenv
+```
+
+### 2) 셸 환경 설정 (.zshrc 파일 수정)
+macOS의 기본 셸인 zsh에서 pyenv 명령어가 항상 우선적으로 호출되도록 환경 변수 경로 설정을 추가해야 합니다. 
+
+```bash
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+```
+
+설정을 마친 후, 현재 열려 있는 터미널 창에 변경 사항을 적용합니다.
+
+```bash
+source ~/.zshrc
+```
+
+### 3) 원하는 파이썬 버전 설치 및 적용
+이제 준비가 되었습니다. 원하는 버전을 조회하고 설치해 봅시다.
+
+```bash
+# 설치 가능한 파이썬 최신 버전 목록 조회
+pyenv install --list | grep -E '^  3\.[0-9]+'
+
+# 특정 파이썬 버전 설치 (예: 3.12.0)
+pyenv install 3.12.0
+
+# Mac 시스템 전체에서 기본적으로 사용할 글로벌 파이썬 버전을 지정
+pyenv global 3.12.0
+```
+
+적용이 완료되었는지 확인하려면 다음 명령어를 실행합니다. 경로가 `/Users/계정명/.pyenv/shims/python`으로 잡혀 있다면 성공적으로 세팅된 것입니다.
+
+```bash
+which python
+# 출력 예시: /Users/username/.pyenv/shims/python
+
+python --version
+# 출력 예시: Python 3.12.0
 ```
 
 ---
 
-## 4. macOS 자동화 스크립트 작성 시 에러 예방 및 주의사항
+## 4. 3단계: venv로 프로젝트별 가상환경 구성하기
 
-*   **하드코딩된 경로 사용 지양**: 절대 경로(`"/Users/minsu_lee/Downloads"`)를 그대로 코드에 써 두면 사용자 계정명이 바뀌거나 다른 Mac으로 소스 코드를 옮겼을 때 에러가 납니다. 반드시 `Path.home()`이나 `os.path.expanduser("~")`를 사용해 동적으로 경로를 읽으세요.
-*   **권한 설정(TCC) 이슈**: macOS는 보안 정책(TCC)이 매우 엄격합니다. 파이썬 스크립트가 데스크탑, 다운로드, 문서 등 시스템 기본 폴더의 파일에 접근하거나 파일을 제어하려 할 때 "Python이 파일에 접근하려고 합니다"라는 시스템 팝업 권한 동의를 거쳐야 정상 작동합니다. 터미널이나 에디터에 '전체 디스크 접근 권한'을 설정해 두면 수월합니다.
-*   **셸 인젝션(Shell Injection) 방지**: `subprocess.run(..., shell=True)` 옵션을 사용해 사용자 입력을 그대로 실행하면 위험한 명령이 주입되어 시스템이 손상될 수 있습니다. 가급적 `shell=True` 옵션을 끄고 인자 리스트(`["df", "-h"]`) 전달 방식을 사용하세요.
+버전을 통일했더라도 프로젝트마다 설치할 패키지(예: Django, FastAPI, PyTorch 등)들을 격리해야 합니다. 파이썬에 내장된 **venv** 모듈을 사용해 가상환경을 구성해 보겠습니다.
+
+### 1) 프로젝트 디렉토리 생성 및 이동
+```bash
+mkdir -p ~/projects/my-first-app
+cd ~/projects/my-first-app
+```
+
+### 2) 가상환경 생성
+디렉토리 내부에 `.venv`라는 이름의 독립된 가상환경 폴더를 만듭니다.
+
+```bash
+python -m venv .venv
+```
+
+### 3) 가상환경 활성화 (Activate)
+생성된 가상환경을 활성화하면, 이후 설치하는 모든 라이브러리는 전역 공간이 아닌 이 프로젝트 폴더 내부(`.venv`)에만 설치됩니다.
+
+```bash
+source .venv/bin/activate
+```
+활성화가 완료되면 터미널 프롬프트 앞에 `(.venv)`라는 표시가 나타납니다.
+
+```bash
+# 가상환경 내 패키지 설치 예시
+pip install --upgrade pip
+pip install requests
+```
+
+### 4) 가상환경 비활성화 (Deactivate)
+작업을 마친 후 가상환경에서 빠져나오려면 단지 다음 명령어를 수행하면 됩니다.
+
+```bash
+deactivate
+```
 
 ---
 
-## 5. 자주 묻는 질문 (FAQ)
+## 5. 4단계: VS Code 에디터 연동 설정
 
-### Q. 작성한 파이썬 스크립트를 매일 특정 시간에 자동으로 실행되게 만들 수 있나요?
-네, macOS에는 리눅스의 cron`과 유사한 시스템 수준의 스케줄러인 `launchd`가 내장되어 있습니다. 실행 주기와 파일 위치를 설정한 `.plist` 파일을 `~/Library/LaunchAgents/` 폴더에 등록해 두면 시스템이 켜져 있는 동안 파이썬 스크립트를 매일 지정한 시간마다 백그라운드에서 실행시킬 수 있습니다.
+코드를 작성할 때 린터(Linter) 오류가 나지 않고 자동 완성이 제대로 작동하려면, 사용하는 에디터(VS Code)가 우리가 방금 만든 가상환경의 파이썬 인터프리터를 인식하도록 설정해야 합니다.
 
-### Q. 파이썬 스크립트를 다른 프로그램 설치 없이 바로 실행하는 앱(.app)으로 포장할 수 있나요?
-`PyInstaller`나 `py2app` 같은 서드파티 라이브러리를 사용하면 작성한 `.py` 스크립트를 독립적으로 실행할 수 있는 macOS 실행 바이너리나 단독 어플리케이션 파일(`.app`) 형태로 패키징할 수 있습니다. 이렇게 하면 파이썬 개발 환경이 깔끔하게 없는 다른 사람에게도 자동화 앱을 배포하여 공유할 수 있습니다.
+1. VS Code로 프로젝트 폴더(`my-first-app`)를 엽니다.
+2. 단축키 `Cmd + Shift + P`를 눌러 명령 팔레트를 엽니다.
+3. **`Python: Select Interpreter`**를 입력하고 선택합니다.
+4. 목록에서 **`Use VS Code's recommended interpreter`** 또는 우리가 생성한 `(.venv) ./venv/bin/python` 경로의 인터프리터를 선택합니다.
 
-### Q. 파일 정리 중에 휴지통으로 버리지 않고 바로 영구 삭제되나요?
-`os.remove()` 또는 `Path.unlink()` 함수는 휴지통을 거치지 않고 디스크에서 파일을 영구 삭제하므로 복구가 어렵습니다. 실무 개발 시 실수를 예방하기 위해 휴지통으로 이동시키는 기능이 안전한데, 이 경우 내장 라이브러리 대신 `send2trash`라는 오픈소스 파이썬 패키지를 설치해 사용하는 것을 권장합니다.
+이렇게 설정하면 코드를 작성할 때 외부 라이브러리 참조 경로가 제대로 잡혀 붉은 밑줄 에러 표시 없이 쾌적한 개발이 가능해집니다.
 
-> 본 글은 macOS 환경에서의 파이썬 자동화 스크립트 구축에 관한 정보 제공용 가이드입니다. 파일 삭제 및 오버라이트 작업은 비가역적인 데이터 손실을 유발할 수 있으므로, 실제 다운로드 폴더나 중요 폴더에 스크립트를 적용하기 전에 반드시 백업 테스트 폴더를 생성하여 정상 작동 여부를 사전에 검증하십시오.
+---
+
+## 6. 자주 발생하는 에러와 문제 해결 (FAQ)
+
+### Q. pyenv install 실행 시 빌드 에러가 납니다.
+M 시리즈 Mac의 경우 빌드 환경 경로가 제대로 잡히지 않아 실패할 수 있습니다. 터미널에 아래 명령어를 실행하여 Xcode 개발자 도구를 재설치/업데이트한 후 다시 시도해 보세요.
+```bash
+xcode-select --install
+```
+
+### Q. pyenv 버전을 global로 설정했는데도 계속 시스템 파이썬 버전이 출력됩니다.
+경로가 꼬인 경우로, 높은 확률로 `.zshrc` 파일에 추가한 `eval "$(pyenv init -)"` 코드가 적용되지 않았거나 파일 하단에 다른 환경 변수 설정으로 덮어써졌을 가능성이 높습니다. `.zshrc` 파일을 열어 해당 라인이 맨 마지막 부분에 잘 배치되어 있는지 점검하고 `source ~/.zshrc`를 다시 한 번 입력해 주세요.
+
+### Q. 가상환경 폴더 `.venv`도 Git에 커밋해야 하나요?
+**절대 안 됩니다.** 가상환경 폴더 내부에는 수백 메가바이트에 달하는 패키지 바이너리 파일들이 포함되어 있으므로 깃허브에 올릴 필요가 없습니다. 프로젝트 루트에 `.gitignore` 파일을 만들고 아래 코드를 한 줄 추가해 줍니다.
+```text
+.venv/
+```
+대신 설치한 라이브러리 목록을 `pip freeze > requirements.txt`로 내보내어, 이 텍스트 파일만 Git에 커밋해 동료들과 공유하세요. 상대방은 공유받은 텍스트 파일로 `pip install -r requirements.txt`를 실행해 똑같은 가상환경을 구축할 수 있습니다.
+
+---
+
+## 7. 요약 및 핵심 체크리스트
+1. **Homebrew**로 모든 설치의 기초 마련하기
+2. **pyenv**로 버전 관리하고 셸 변수(`.zshrc`) 등록하기
+3. 프로젝트 폴더마다 **`python -m venv .venv`**로 가상환경 구축하고 격리하기
+4. `.venv/` 경로는 절대 Git에 올리지 말고 **`.gitignore`**에 꼭 등록하기
+
+> 본 가이드는 macOS Sequoia 및 M 시리즈 프로세서 환경을 기준으로 검증되었습니다. 파이썬 설치 도중 문제가 생기거나 동작하지 않는 단계가 있다면 언제든 댓글로 상세 로그를 남겨주세요!
