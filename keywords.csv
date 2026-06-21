@@ -1,0 +1,31 @@
+keyword,seed,intent,suggested_title,notes,priority
+python asyncio,python,정보형,Python asyncio 기초: 동기 코드에서 비동기로 넘어가는 첫걸음,asyncio의 동작 원리인 코루틴과 이벤트 루프 설명 및 간단한 실행 예제,1
+pydantic 사용법,python,실행형,Pydantic 사용법: API 데이터 검증과 직렬화 한 방에 해결하기,BaseModel 클래스 정의와 필드 타입 선언 및 validator 데코레이터 실무 활용 예제,2
+macOS python 자동화,automation,실행형,macOS 반복 작업 자동화: Python으로 스크립트 작성하기,os 및 subprocess 모듈 활용법과 macOS 환경설정 연동 실무 스크립트 예제,3
+GitHub Actions 블로그 배포,automation,실행형,GitHub Actions로 Hugo 블로그 배포 자동화하기,Actions workflow 설정법과 deploy-key 등록 및 실시간 빌드 자동화 가이드,4
+LLM 프롬프트 템플릿 설계,ai,비교형,LLM 프롬프트 템플릿 설계 패턴: LangChain vs 수동 포맷팅 비교,두 방식의 유연성과 유지보수 편의성 비교 및 실무 템플릿 코드 구현 가이드,5
+Cursor Agent 블로그,ai,실행형,Cursor Agent로 기술 블로그 초안 생성 및 배포 자동화하기,에이전트 기능 설정법과 프롬프트 최적화 및 자동 감수 루틴 구축 가이드,6
+pandas 결측치 처리,data-analysis,실행형,pandas 결측치 처리 전략: dropna와 fillna 실무 패턴 정리,결측치를 단순 제거할 때와 평균/중위수/보간으로 채울 때의 차이와 코드 실습,7
+pandas EDA 하는법,data-analysis,실행형,pandas로 EDA 빠르게 하는 법: 데이터 프로파일링 기초,describe와 value_counts 및 df.info 활용법과 pandas-profiling 라이브러리 소개,8
+백테스트 오버피팅 피하기,quant,정보형,백테스트의 함정: 과거 데이터 오버피팅(과적합) 방지 가이드,생존 편향과 전방 참조 편향의 원인 및 이를 예방하는 백테스팅 설계 전략,9
+팩터 투자 입문,quant,정보형,"팩터 투자 전략 입문: 밸류, 모멘텀, 퀄리티 팩터 이해하기",각 팩터의 정의와 과거 성과 비교 및 멀티 팩터 조합 기초 이론 소개,10
+python 타입 힌트,python,정보형,Python 타입 힌트 완벽 가이드: 정적 타입 분석으로 버그 줄이기,typing 모듈과 Union 및 Optional 선언법과 mypy 정적 검사 도구 활용법,11
+pytest fixture 사용법,python,실행형,pytest fixture 패턴 정리: 테스트 코드를 깔끔하게 관리하는 법,pytest fixture 기초와 scope 설정법 및 mock 오브젝트 활용 실습,12
+구글 스프레드시트 파이썬 연동,automation,실행형,파이썬으로 구글 스프레드시트 읽고 쓰기 (gspread 자동화 완벽 가이드),GCP 서비스 계정 키 생성법과 gspread 설치 및 셀 업데이트 실무 예제 코드,13
+파이썬 셀레늄 크롤링,automation,실행형,Python Selenium 크롤링 기초: 동적 웹페이지 데이터 수집,웹드라이버 매니저 활용법과 암묵적/명시적 대기 시간 설정 및 봇 방지 우회 팁,14
+RAG 파이프라인 구축,ai,정보형,RAG 파이프라인 구축 입문: 외부 데이터로 LLM 답변 강화하기,RAG의 개념적 원리와 벡터 데이터베이스 도입 이유 및 정보 검색기 연동 가이드,15
+LLM 할루시네이션 줄이기,ai,정보형,LLM 할루시네이션 줄이는 글쓰기 및 프롬프트 제어 전략,Few-shot 프롬프팅 적용법과 Chain-of-Thought(CoT) 및 사실 기반 검증 프로세스,16
+시계열 데이터 시각화,data-analysis,실행형,Python 시계열 데이터 시각화 패턴: matplotlib과 plotly,축 포맷팅 설정과 트렌드 라인 그리기 및 plotly를 이용한 대화형 차트 구현 예제,17
+AB 테스트 해석,data-analysis,정보형,A/B 테스트 결과 해석하기: p-value와 통계적 유의성,t-test 및 카이제곱 검정 이론 설명과 python scipy 모듈 활용 분석 실습,18
+샤프 비율 MDD,quant,정보형,샤프 비율(Sharpe Ratio)과 MDD 이해하기: 투자 전략 리스크 측정,샤프 비율 및 최대 낙폭 계산식 설명과 파이썬을 활용한 지표 산출 예제 코드,19
+포트폴리오 리밸런싱 주기,quant,비교형,리밸런싱 주기별 수익률 비교: 월간 vs 분기 vs 연간 백테스트,리밸런싱 주기가 세금 및 수수료에 미치는 영향과 파이썬 백테스팅 코드 분석,20
+python logging 설정,python,실행형,Python logging 실무 설정 가이드: 파일 로깅과 포맷팅,logging.config 설정법과 로테이팅 파일 핸들러 설정 및 에러 추적 팁,21
+파이썬 이메일 전송 자동화,automation,실행형,Python으로 이메일 전송 자동화하기 (SMTP와 email 모듈),네이버 및 구글 SMTP 설정법과 HTML 메일 전송 및 첨부파일 추가 방법,22
+AI 에이전트 설계,ai,정보형,AI 에이전트 워크플로우 설계 입문: 도구(Tools)와 계획(Planning),ReAct 프레임워크 개념 설명 및 LangChain 에이전트 연동 기초 가이드,23
+matplotlib plotly 차이,data-analysis,비교형,matplotlib vs plotly 선택 기준: 정적 시각화와 동적 시각화 비교,두 라이브러리의 성능과 커스터마이징 난이도 및 웹 업로드 유연성 비교,24
+주식 모멘텀 전략,quant,실행형,파이썬으로 구현하는 듀얼 모멘텀 투자 전략 기초,상대 모멘텀과 절대 모멘텀 계산법과 종목 필터링 및 포트폴리오 비중 조절 코드,25
+데이터 포트폴리오 작성법,career,정보형,데이터 직무 포트폴리오 정리법: 프로젝트 결과 중심 기술,스타(STAR) 기법 적용법과 깃허브 리드미 작성 요령 및 이력서 연동 가이드,26
+기술 블로그 꾸준히 쓰는법,career,정보형,기술 블로그 꾸준히 쓰는 방법: 글감 고갈 해결하기,데일리 토픽 선정 루틴과 자동화 스크립트 활용 및 학습 노트 기록 팁,27
+주니어 개발자 로드맵,career,정보형,주니어 개발자를 위한 실무 기술 학습 로드맵과 팁,기초 스택 다지기 요령과 문제 해결 중심 학습법 및 협업 역량 기르기 가이드,28
+사이드 프로젝트 MVP 만들기,projects,실행형,사이드 프로젝트 MVP 설계 가이드: 1주일 안에 출시하기,기능 범위 좁히기 요령과 불필요한 기능 제거 및 서버리스/SaaS 적극 활용법,29
+코드 리뷰 성장하는법,career,정보형,코드 리뷰 받으며 개발자로 빠르게 성장하는 실무 가이드,좋은 PR 작성법과 리뷰 피드백 수용 요령 및 긍정적인 리뷰 문화 동참 방법,30
