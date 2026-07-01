@@ -1,8 +1,8 @@
 {
-  "date": "2026-07-01",
-  "category": "data-analysis",
-  "topic": "결측치 처리 전략 비교",
-  "slug": "topic-2026-06-30",
-  "command": "python3 scripts/generate_article.py --category data-analysis --topic \"결측치 처리 전략 비교\" --slug topic-2026-06-30 --scaffold",
-  "generated_at": "2026-07-01T02:06:25.490348+09:00"
+  "date": "2026-07-02",
+  "category": "quant",
+  "topic": "거래비용이 전략에 미치는 영향",
+  "slug": "topic-2026-07-01",
+  "command": "python3 scripts/generate_article.py --category quant --topic \"거래비용이 전략에 미치는 영향\" --slug topic-2026-07-01 --scaffold",
+  "generated_at": "2026-07-02T02:14:18.633950+09:00"
 }
