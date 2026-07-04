@@ -1,8 +1,8 @@
 {
-  "date": "2026-07-04",
-  "category": "career",
-  "topic": "매일 30분 학습 루틴 만들기",
-  "slug": "30",
-  "command": "python3 scripts/generate_article.py --category career --topic \"매일 30분 학습 루틴 만들기\" --slug 30 --scaffold",
-  "generated_at": "2026-07-04T01:24:25.849909+09:00"
+  "date": "2026-07-05",
+  "category": "python",
+  "topic": "Python asyncio 기초와 실무 활용",
+  "slug": "python-asyncio",
+  "command": "python3 scripts/generate_article.py --category python --topic \"Python asyncio 기초와 실무 활용\" --slug python-asyncio --scaffold",
+  "generated_at": "2026-07-05T01:02:31.292893+09:00"
 }
