@@ -1,8 +1,8 @@
 {
-  "date": "2026-07-20",
-  "category": "automation",
-  "topic": "GitHub Actions로 블로그 배포 자동화",
-  "slug": "github-actions",
-  "command": "python3 scripts/generate_article.py --category automation --topic \"GitHub Actions로 블로그 배포 자동화\" --slug github-actions --scaffold",
-  "generated_at": "2026-07-20T00:58:03.131188+09:00"
+  "date": "2026-07-21",
+  "category": "ai",
+  "topic": "RAG 파이프라인 구축 입문",
+  "slug": "rag",
+  "command": "python3 scripts/generate_article.py --category ai --topic \"RAG 파이프라인 구축 입문\" --slug rag --scaffold",
+  "generated_at": "2026-07-21T01:23:52.766074+09:00"
 }
