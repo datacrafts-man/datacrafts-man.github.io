@@ -1,8 +1,8 @@
 {
-  "date": "2026-08-02",
-  "category": "python",
-  "topic": "Python asyncio 기초와 실무 활용",
-  "slug": "python-asyncio",
-  "command": "python3 scripts/generate_article.py --category python --topic \"Python asyncio 기초와 실무 활용\" --slug python-asyncio --scaffold",
-  "generated_at": "2026-08-02T01:00:20.680159+09:00"
+  "date": "2026-08-03",
+  "category": "automation",
+  "topic": "GitHub Actions로 블로그 배포 자동화",
+  "slug": "github-actions",
+  "command": "python3 scripts/generate_article.py --category automation --topic \"GitHub Actions로 블로그 배포 자동화\" --slug github-actions --scaffold",
+  "generated_at": "2026-08-03T01:02:07.260473+09:00"
 }
