@@ -1,8 +1,8 @@
 {
-  "date": "2026-08-13",
-  "category": "quant",
-  "topic": "거래비용이 전략에 미치는 영향",
-  "slug": "topic-2026-08-12",
-  "command": "python3 scripts/generate_article.py --category quant --topic \"거래비용이 전략에 미치는 영향\" --slug topic-2026-08-12 --scaffold",
-  "generated_at": "2026-08-13T00:58:37.478892+09:00"
+  "date": "2026-08-14",
+  "category": "projects",
+  "topic": "개인 대시보드 프로젝트 회고",
+  "slug": "topic-2026-08-13",
+  "command": "python3 scripts/generate_article.py --category projects --topic \"개인 대시보드 프로젝트 회고\" --slug topic-2026-08-13 --scaffold",
+  "generated_at": "2026-08-14T00:58:44.452964+09:00"
 }
