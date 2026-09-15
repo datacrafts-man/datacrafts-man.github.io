@@ -1,8 +1,8 @@
 {
-  "date": "2026-09-15",
-  "category": "ai",
-  "topic": "RAG 파이프라인 구축 입문",
-  "slug": "rag",
-  "command": "python3 scripts/generate_article.py --category ai --topic \"RAG 파이프라인 구축 입문\" --slug rag --scaffold",
-  "generated_at": "2026-09-15T04:44:12.934138+09:00"
+  "date": "2026-09-16",
+  "category": "data-analysis",
+  "topic": "결측치 처리 전략 비교",
+  "slug": "topic-2026-09-15",
+  "command": "python3 scripts/generate_article.py --category data-analysis --topic \"결측치 처리 전략 비교\" --slug topic-2026-09-15 --scaffold",
+  "generated_at": "2026-09-16T03:43:39.775680+09:00"
 }
