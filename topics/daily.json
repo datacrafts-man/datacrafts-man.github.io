@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-09",
-  "category": "projects",
-  "topic": "개인 대시보드 프로젝트 회고",
-  "slug": "topic-2026-10-08",
-  "command": "python3 scripts/generate_article.py --category projects --topic \"개인 대시보드 프로젝트 회고\" --slug topic-2026-10-08 --scaffold",
-  "generated_at": "2026-10-09T05:31:02.028470+09:00"
+  "date": "2026-10-10",
+  "category": "career",
+  "topic": "매일 30분 학습 루틴 만들기",
+  "slug": "30",
+  "command": "python3 scripts/generate_article.py --category career --topic \"매일 30분 학습 루틴 만들기\" --slug 30 --scaffold",
+  "generated_at": "2026-10-10T05:00:23.211926+09:00"
 }
